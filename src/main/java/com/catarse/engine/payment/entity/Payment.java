@@ -1,6 +1,6 @@
 package com.catarse.engine.payment.entity;  // ← CORRETO
 
-public enum PaymentStatus {
+public enum Payment {
     PENDING,
     PROCESSING,
     APPROVED,

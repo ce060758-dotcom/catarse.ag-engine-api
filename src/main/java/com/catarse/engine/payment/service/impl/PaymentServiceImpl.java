@@ -7,7 +7,7 @@ import com.catarse.engine.exception.BusinessException;
 import com.catarse.engine.exception.ResourceNotFoundException;
 import com.catarse.engine.payment.dto.request.PaymentRequest;
 import com.catarse.engine.payment.dto.response.PaymentResponse;
-import com.catarse.engine.payment.entity.Payment;
+import com.catarse.engine.payment.entity.PaymentEntity;
 import com.catarse.engine.payment.entity.PaymentStatus;
 import com.catarse.engine.payment.repository.PaymentRepository;
 import com.catarse.engine.payment.service.PaymentService;
@@ -51,10 +51,10 @@ public class PaymentServiceImpl implements PaymentService {
 
         // Validar valor
         if (!donation.getAmount().equals(request.getAmount())) {
-            throw new BusinessException("Payment amount must match donation amount");
+            throw new BusinessException("PaymentEntity amount must match donation amount");
         }
 
-        Payment payment = new Payment();
+        PaymentEntity payment = new PaymentEntity();
         payment.setDonationId(request.getDonationId());
         payment.setUserId(userId);
         payment.setAmount(request.getAmount());
@@ -62,7 +62,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setStatus(PaymentStatus.PROCESSING);
 
         // Simular processamento com gateway
-        Payment processedPayment = simulateGatewayProcessing(payment, request);
+        PaymentEntity processedPayment = simulateGatewayProcessing(payment, request);
 
         // Atualizar status da doação se pagamento foi aprovado
         if (processedPayment.getStatus() == PaymentStatus.APPROVED) {
@@ -71,15 +71,15 @@ public class PaymentServiceImpl implements PaymentService {
             donationRepository.save(donation);
         }
 
-        Payment savedPayment = paymentRepository.save(processedPayment);
+        PaymentEntity savedPayment = paymentRepository.save(processedPayment);
         return mapToResponse(savedPayment);
     }
 
     @Override
     @Cacheable(value = "payments", key = "#id")
     public PaymentResponse getPaymentById(Long id, Long userId) {
-        Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment not found with id: " + id));
+        PaymentEntity payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("PaymentEntity not found with id: " + id));
 
         // Qualquer um pode ver? Apenas dono ou admin
         if (!payment.getUserId().equals(userId)) {
@@ -105,8 +105,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     @CacheEvict(value = "payments", key = "#id")
     public PaymentResponse updatePaymentStatus(Long id, String status, Long userId) {
-        Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment not found with id: " + id));
+        PaymentEntity payment = paymentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("PaymentEntity not found with id: " + id));
 
         // Apenas admin pode forçar status
         // TODO: Verificar role do usuário
@@ -130,7 +130,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new BusinessException("Invalid status: " + status);
         }
 
-        Payment updatedPayment = paymentRepository.save(payment);
+        PaymentEntity updatedPayment = paymentRepository.save(payment);
         return mapToResponse(updatedPayment);
     }
 
@@ -141,7 +141,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .map(this::mapToResponse);
     }
 
-    private Payment simulateGatewayProcessing(Payment payment, PaymentRequest request) {
+    private PaymentEntity simulateGatewayProcessing(PaymentEntity payment, PaymentRequest request) {
         // Simulação de processamento com gateway de pagamento
         log.info("Processing payment for donation: {}", payment.getDonationId());
 
@@ -157,7 +157,7 @@ public class PaymentServiceImpl implements PaymentService {
                     payment.setGatewayResponse("Invalid credit card");
                 } else {
                     payment.setStatus(PaymentStatus.APPROVED);
-                    payment.setGatewayResponse("Payment approved");
+                    payment.setGatewayResponse("PaymentEntity approved");
                     // Mascarar número do cartão para log
                     String maskedCard = "**** **** **** " +
                             request.getCardNumber().substring(request.getCardNumber().length() - 4);
@@ -187,7 +187,7 @@ public class PaymentServiceImpl implements PaymentService {
         return payment;
     }
 
-    private PaymentResponse mapToResponse(Payment payment) {
+    private PaymentResponse mapToResponse(PaymentEntity payment) {
         PaymentResponse response = new PaymentResponse();
         response.setId(payment.getId());
         response.setDonationId(payment.getDonationId());

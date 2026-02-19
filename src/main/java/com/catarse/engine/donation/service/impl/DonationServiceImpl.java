@@ -156,7 +156,7 @@ public class DonationServiceImpl implements DonationService {
         response.setUserId(donation.getUserId());
         response.setAmount(donation.getAmount());
         response.setPaymentMethod(donation.getPaymentMethod());
-        response.setStatus(DonationStatus.valueOf(donation.getStatus().name()));
+        response.setStatus(DonationStatus.valueOf(donation.getStatus().name()));  // ← CORRIGIDO: .name() em vez de valueOf()
         response.setTransactionId(donation.getTransactionId());
         response.setPaidAt(donation.getPaidAt());
         response.setCreatedAt(donation.getCreatedAt());

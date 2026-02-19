@@ -17,8 +17,8 @@ public class PaymentRequest {
     @DecimalMin(value = "1.00", message = "Amount must be at least R$ 1,00")
     private BigDecimal amount;
 
-    @NotNull(message = "Payment method is required")
-    @Pattern(regexp = "CREDIT_CARD|PIX|BOLETO", message = "Payment method must be CREDIT_CARD, PIX or BOLETO")
+    @NotNull(message = "PaymentEntity method is required")
+    @Pattern(regexp = "CREDIT_CARD|PIX|BOLETO", message = "PaymentEntity method must be CREDIT_CARD, PIX or BOLETO")
     private String paymentMethod;
 
     private String cardNumber;      // Para CREDIT_CARD

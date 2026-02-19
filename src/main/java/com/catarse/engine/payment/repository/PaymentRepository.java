@@ -1,6 +1,11 @@
 package com.catarse.engine.payment.repository;
 
-import com.catarse.engine.payment.entity.Payment;
+
+import com.catarse.engine.payment.entity.PaymentEntity;
+
+import com.catarse.engine.payment.entity.PaymentEntity;
+import com.catarse.engine.payment.entity.PaymentEntity;
+
 import com.catarse.engine.payment.entity.PaymentStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,17 +17,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, Long> {
+public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
 
-    Page<Payment> findByUserId(Long userId, Pageable pageable);
+    Page<PaymentEntity> findByUserId(Long userId, Pageable pageable);
 
-    Page<Payment> findByDonationId(Long donationId, Pageable pageable);
+    Page<PaymentEntity> findByDonationId(Long donationId, Pageable pageable);
 
-    Optional<Payment> findByTransactionId(String transactionId);
+    Optional<PaymentEntity> findByTransactionId(String transactionId);
 
-    List<Payment> findByStatusAndCreatedAtBefore(PaymentStatus status, LocalDateTime date);
+    List<PaymentEntity> findByStatusAndCreatedAtBefore(PaymentStatus status, LocalDateTime date);
 
-    List<Payment> findByStatus(PaymentStatus status);
+    List<PaymentEntity> findByStatus(PaymentStatus status);
 
     boolean existsByDonationIdAndStatus(Long donationId, PaymentStatus status);
 }

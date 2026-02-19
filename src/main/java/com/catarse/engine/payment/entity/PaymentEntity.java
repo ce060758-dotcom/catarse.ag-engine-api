@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "payments")
 @Data
 @NoArgsConstructor
-public class Payment {
+public class PaymentEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +32,7 @@ public class Payment {
     private String paymentMethod;  // CREDIT_CARD, PIX, BOLETO
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentStatus status = PaymentStatus.PENDING;
 
     private String transactionId;

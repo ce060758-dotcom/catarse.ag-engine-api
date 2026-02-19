@@ -15,6 +15,6 @@ public class DonationRequest {
     @DecimalMin(value = "1.00", message = "Amount must be at least R$ 1,00")
     private BigDecimal amount;
 
-    @NotNull(message = "Payment method is required")
+    @NotNull(message = "PaymentEntity method is required")
     private String paymentMethod;
 }
